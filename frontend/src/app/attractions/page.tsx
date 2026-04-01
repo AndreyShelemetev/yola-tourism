@@ -4,11 +4,22 @@ import Card from '@/components/Card';
 import SectionGrid from '@/components/SectionGrid';
 import SearchBar from '@/components/SearchBar';
 import Pagination from '@/components/Pagination';
+import type { Metadata } from 'next';
 import { Suspense } from 'react';
 
-export const metadata = {
-  title: 'Достопримечательности Йошкар-Олы',
-};
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}): Promise<Metadata> {
+  const params = await searchParams;
+  const page = params.page ? Number(params.page) : 1;
+  return {
+    title: 'Достопримечательности Йошкар-Олы' + (page > 1 ? ` — страница ${page}` : ''),
+    alternates: { canonical: '/attractions/' },
+    robots: page > 1 ? { index: false, follow: true } : undefined,
+  };
+}
 
 export default async function AttractionsPage({
   searchParams,

@@ -4,6 +4,7 @@ import { SITE_NAME } from '@/lib/seo';
 export const metadata: Metadata = {
   title: `Политика конфиденциальности | ${SITE_NAME}`,
   description: 'Политика конфиденциальности туристического портала Йошкар-Олы.',
+  alternates: { canonical: '/privacy/' },
 };
 
 export default function PrivacyPage() {

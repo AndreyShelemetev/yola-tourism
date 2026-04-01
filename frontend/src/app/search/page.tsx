@@ -8,6 +8,7 @@ import Link from 'next/link';
 export const metadata = {
   title: 'Поиск — Йошкар-Ола Туризм',
   robots: { index: false, follow: true },
+  alternates: { canonical: '/search/' },
 };
 
 function formatDate(dateStr: string) {

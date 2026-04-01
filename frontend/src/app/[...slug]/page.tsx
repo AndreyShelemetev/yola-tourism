@@ -113,9 +113,7 @@ function buildCanonicalPath(parsed: ParsedSlug): string {
   if (parsed.region) parts.push(parsed.region);
   if (parsed.city) parts.push(parsed.city);
   if (parsed.type) parts.push(parsed.type);
-  if (parsed.page && parsed.page > 1) {
-    parts.push('page', String(parsed.page));
-  }
+  // Canonical всегда указывает на основную страницу (без /page/N)
   return buildPath(...parts);
 }
 

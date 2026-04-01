@@ -4,6 +4,7 @@ import { SITE_NAME } from '@/lib/seo';
 export const metadata: Metadata = {
   title: `О проекте | ${SITE_NAME}`,
   description: 'Информация о туристическом портале Йошкар-Олы и Республики Марий Эл.',
+  alternates: { canonical: '/about/' },
 };
 
 export default function AboutPage() {

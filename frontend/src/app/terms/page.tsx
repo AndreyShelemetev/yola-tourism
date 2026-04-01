@@ -4,6 +4,7 @@ import { SITE_NAME } from '@/lib/seo';
 export const metadata: Metadata = {
   title: `Условия использования | ${SITE_NAME}`,
   description: 'Условия использования туристического портала Йошкар-Олы.',
+  alternates: { canonical: '/terms/' },
 };
 
 export default function TermsPage() {

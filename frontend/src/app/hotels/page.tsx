@@ -6,11 +6,22 @@ import SectionGrid from '@/components/SectionGrid';
 import SearchBar from '@/components/SearchBar';
 import HotelFilters from '@/components/HotelFilters';
 import Pagination from '@/components/Pagination';
+import type { Metadata } from 'next';
 import { Suspense } from 'react';
 
-export const metadata = {
-  title: 'Отели Йошкар-Олы',
-};
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}): Promise<Metadata> {
+  const params = await searchParams;
+  const page = params.page ? Number(params.page) : 1;
+  return {
+    title: 'Отели Йошкар-Олы' + (page > 1 ? ` — страница ${page}` : ''),
+    alternates: { canonical: '/hotels/' },
+    robots: page > 1 ? { index: false, follow: true } : undefined,
+  };
+}
 
 export default async function HotelsPage({
   searchParams,

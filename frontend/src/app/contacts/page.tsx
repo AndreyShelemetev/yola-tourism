@@ -4,6 +4,7 @@ import { SITE_NAME } from '@/lib/seo';
 export const metadata: Metadata = {
   title: `Контакты | ${SITE_NAME}`,
   description: 'Контактная информация туристического портала Йошкар-Олы.',
+  alternates: { canonical: '/contacts/' },
 };
 
 export default function ContactsPage() {

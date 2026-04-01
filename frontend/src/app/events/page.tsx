@@ -4,11 +4,22 @@ import SectionGrid from '@/components/SectionGrid';
 import Card from '@/components/Card';
 import SearchBar from '@/components/SearchBar';
 import Pagination from '@/components/Pagination';
+import type { Metadata } from 'next';
 import { Suspense } from 'react';
 
-export const metadata = {
-  title: 'События в Йошкар-Оле',
-};
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}): Promise<Metadata> {
+  const params = await searchParams;
+  const page = params.page ? Number(params.page) : 1;
+  return {
+    title: 'События в Йошкар-Оле' + (page > 1 ? ` — страница ${page}` : ''),
+    alternates: { canonical: '/events/' },
+    robots: page > 1 ? { index: false, follow: true } : undefined,
+  };
+}
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString('ru-RU', {
