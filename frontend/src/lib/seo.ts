@@ -1,5 +1,5 @@
 export const SITE_NAME = 'Йошкар-Ола Туризм';
-export const SITE_DOMAIN = 'yoshkar-ola-tourism.ru';
+export const SITE_DOMAIN = 'yolatur.ru';
 export const SITE_URL = `https://${SITE_DOMAIN}`;
 
 export const DEFAULT_REGION = 'mari-el';
