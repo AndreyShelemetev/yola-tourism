@@ -8,6 +8,7 @@ import HotelFilters from '@/components/HotelFilters';
 import Pagination from '@/components/Pagination';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
+import { makeObjectSlug } from '@/lib/slugify';
 
 export async function generateMetadata({
   searchParams,
@@ -66,7 +67,7 @@ export default async function HotelsPage({
           result.items.map((h) => (
             <Card
               key={h.id}
-              href={`/hotels/${h.id}`}
+              href={`/mari-el/yoshkar-ola/oteli/${makeObjectSlug(h.name, h.id)}`}
               imageUrl={h.imageUrl}
               title={h.name}
               subtitle={h.address}

@@ -1,4 +1,7 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5100';
+const API_BASE =
+  (typeof window === 'undefined' ? process.env.INTERNAL_API_URL : undefined) ||
+  process.env.NEXT_PUBLIC_API_URL ||
+  'http://localhost:5100';
 
 async function fetchApi<T>(path: string): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, {

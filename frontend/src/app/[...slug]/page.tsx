@@ -76,10 +76,13 @@ export async function generateMetadata({
 /* ─── Page ─── */
 export default async function CatchAllPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string[] }>;
+  searchParams: Promise<Record<string, string | undefined>>;
 }) {
   const { slug } = await params;
+  const sp = await searchParams;
   const parsed = parseSlugSegments(slug);
   if (!parsed.valid) notFound();
 
@@ -90,7 +93,7 @@ export default async function CatchAllPage({
 
   // Листинг или обзор
   if (parsed.type) {
-    return renderListing(parsed);
+    return renderListing(parsed, sp);
   }
 
   // Страница города
@@ -283,10 +286,10 @@ async function renderCityOverview(parsed: ParsedSlug) {
 }
 
 /* ─── Listing page ─── */
-async function renderListing(parsed: ParsedSlug) {
+async function renderListing(parsed: ParsedSlug, sp: Record<string, string | undefined>) {
   const et = ENTITY_TYPES[parsed.type!];
   const { h1, noindex } = generateListingMeta(parsed);
-  const page = parsed.page ?? 1;
+  const page = parsed.page ?? (sp.page ? Number(sp.page) : 1);
   const crumbs = buildBreadcrumbs({
     region: parsed.region,
     city: parsed.city,
@@ -295,16 +298,16 @@ async function renderListing(parsed: ParsedSlug) {
   const canonicalPath = buildCanonicalPath(parsed);
 
   if (et.apiPath === 'attractions') {
-    return renderAttractionsList(parsed, et, h1, crumbs, page, noindex, canonicalPath);
+    return renderAttractionsList(parsed, et, h1, crumbs, page, noindex, canonicalPath, sp);
   }
   if (et.apiPath === 'hotels') {
-    return renderHotelsList(parsed, et, h1, crumbs, page, noindex, canonicalPath);
+    return renderHotelsList(parsed, et, h1, crumbs, page, noindex, canonicalPath, sp);
   }
   if (et.apiPath === 'restaurants') {
-    return renderRestaurantsList(parsed, et, h1, crumbs, page, noindex, canonicalPath);
+    return renderRestaurantsList(parsed, et, h1, crumbs, page, noindex, canonicalPath, sp);
   }
   if (et.apiPath === 'events') {
-    return renderEventsList(parsed, et, h1, crumbs, page, noindex, canonicalPath);
+    return renderEventsList(parsed, et, h1, crumbs, page, noindex, canonicalPath, sp);
   }
   notFound();
 }
@@ -316,11 +319,12 @@ async function renderAttractionsList(
   crumbs: ReturnType<typeof buildBreadcrumbs>,
   page: number,
   noindex: boolean,
-  canonicalPath: string
+  canonicalPath: string,
+  sp: Record<string, string | undefined>
 ) {
   let result = { items: [] as any[], totalCount: 0, page: 1, pageSize: 12, totalPages: 0 };
   try {
-    result = await getAttractions({ page });
+    result = await getAttractions({ page, category: sp.category, search: sp.search });
   } catch {}
 
   return (
@@ -375,11 +379,19 @@ async function renderHotelsList(
   crumbs: ReturnType<typeof buildBreadcrumbs>,
   page: number,
   noindex: boolean,
-  canonicalPath: string
+  canonicalPath: string,
+  sp: Record<string, string | undefined>
 ) {
   let result = { items: [] as any[], totalCount: 0, page: 1, pageSize: 12, totalPages: 0 };
   try {
-    result = await getHotels({ page });
+    result = await getHotels({
+      page,
+      sort: sp.sort,
+      minStars: sp.minStars ? Number(sp.minStars) : undefined,
+      minRating: sp.minRating ? Number(sp.minRating) : undefined,
+      city: sp.city,
+      search: sp.search,
+    });
   } catch {}
 
   return (
@@ -444,11 +456,12 @@ async function renderRestaurantsList(
   crumbs: ReturnType<typeof buildBreadcrumbs>,
   page: number,
   noindex: boolean,
-  canonicalPath: string
+  canonicalPath: string,
+  sp: Record<string, string | undefined>
 ) {
   let result = { items: [] as any[], totalCount: 0, page: 1, pageSize: 12, totalPages: 0 };
   try {
-    result = await getRestaurants({ page });
+    result = await getRestaurants({ page, cuisine: sp.cuisine, search: sp.search });
   } catch {}
 
   return (
@@ -505,11 +518,12 @@ async function renderEventsList(
   crumbs: ReturnType<typeof buildBreadcrumbs>,
   page: number,
   noindex: boolean,
-  canonicalPath: string
+  canonicalPath: string,
+  sp: Record<string, string | undefined>
 ) {
   let result = { items: [] as any[], totalCount: 0, page: 1, pageSize: 12, totalPages: 0 };
   try {
-    result = await getEvents({ upcoming: true, page });
+    result = await getEvents({ upcoming: true, page, search: sp.search });
   } catch {}
 
   return (

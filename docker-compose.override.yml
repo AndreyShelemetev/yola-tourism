@@ -1,0 +1,27 @@
+# Override for local macOS development (network_mode: host doesn't work on macOS)
+services:
+  db:
+    network_mode: ""
+    ports:
+      - "5432:5432"
+
+  meilisearch:
+    network_mode: ""
+    ports:
+      - "7700:7700"
+
+  backend:
+    network_mode: ""
+    ports:
+      - "5100:5000"
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=yoshkarola_tourism;Username=postgres;Password=postgres
+      - MeiliSearch__Url=http://meilisearch:7700
+
+  frontend:
+    network_mode: ""
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:5100
+      - INTERNAL_API_URL=http://backend:5000
