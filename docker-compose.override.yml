@@ -1,17 +1,24 @@
 # Override for local macOS development (network_mode: host doesn't work on macOS)
+# This file removes network_mode: host and adds port mappings + service discovery
 services:
   db:
-    network_mode: ""
+    network_mode: !reset null
+    networks:
+      - default
     ports:
       - "5432:5432"
 
   meilisearch:
-    network_mode: ""
+    network_mode: !reset null
+    networks:
+      - default
     ports:
       - "7700:7700"
 
   backend:
-    network_mode: ""
+    network_mode: !reset null
+    networks:
+      - default
     ports:
       - "5100:5000"
     environment:
@@ -19,7 +26,9 @@ services:
       - MeiliSearch__Url=http://meilisearch:7700
 
   frontend:
-    network_mode: ""
+    network_mode: !reset null
+    networks:
+      - default
     ports:
       - "3000:3000"
     environment:
