@@ -30,6 +30,7 @@ import StarRating from '@/components/StarRating';
 import Pagination from '@/components/Pagination';
 import Breadcrumbs, { buildBreadcrumbs } from '@/components/Breadcrumbs';
 import HotelFilters from '@/components/HotelFilters';
+import ImageGallery from '@/components/ImageGallery';
 import {
   OrganizationLd,
   TouristAttractionLd,
@@ -339,16 +340,18 @@ async function renderCityOverview(parsed: ParsedSlug) {
         {/* Photo Gallery */}
         <section className="pb-12">
           <h2 className="text-2xl font-bold mb-6">Фото {city.nameGen}</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-2 rounded-xl overflow-hidden">
-            <div className="md:col-span-2 md:row-span-2">
-              <img src="https://avatars.mds.yandex.net/get-marketcms/1533751/img-d7f7d532-6353-4c38-b0bc-0bbb0631ce8f.jpeg/optimize" alt="Набережная Брюгге в Йошкар-Оле" className="w-full h-full object-cover min-h-[200px] md:min-h-[420px]" />
-            </div>
-            <img src="https://fs.tonkosti.ru/ai/uk/aiukc6xc7p4wowgk88ow880s0.jpg" alt="Площадь Республики Йошкар-Ола" className="w-full h-[206px] object-cover" />
-            <img src="https://kazan-tur.com/upload/iblock/7cc/6ycrc1ytfa2qxprk95l7irydqkihxm17.jpg" alt="Набережная Амстердам" className="w-full h-[206px] object-cover" />
-            <img src="https://cdnn21.img.ria.ru/images/07e7/0a/0d/1902651313_0:150:3107:1898_1920x0_80_0_0_d839cd9a279cccfe72ac4a55233fead2.jpg" alt="Вечерняя Йошкар-Ола" className="w-full h-[206px] object-cover" />
-            <img src="https://ic.pics.livejournal.com/zdorovs/16627846/1482515/1482515_original.jpg" alt="Патриаршая площадь и часы 12 апостолов" className="w-full h-[206px] object-cover" />
-            <img src="https://s14.stc.all.kpcdn.net/russia/wp-content/uploads/2021/10/Ploshhad-Respubliki-i-Presvyatoj-Devy-Marii-Joshkar-Ola-2048.jpg" alt="Площадь Республики и Пресвятой Девы Марии" className="w-full h-[206px] object-cover" />
-          </div>
+          <ImageGallery
+            layout="grid"
+            alt={`Фото ${city.nameGen}`}
+            images={[
+              'https://avatars.mds.yandex.net/get-marketcms/1533751/img-d7f7d532-6353-4c38-b0bc-0bbb0631ce8f.jpeg/optimize',
+              'https://fs.tonkosti.ru/ai/uk/aiukc6xc7p4wowgk88ow880s0.jpg',
+              'https://kazan-tur.com/upload/iblock/7cc/6ycrc1ytfa2qxprk95l7irydqkihxm17.jpg',
+              'https://cdnn21.img.ria.ru/images/07e7/0a/0d/1902651313_0:150:3107:1898_1920x0_80_0_0_d839cd9a279cccfe72ac4a55233fead2.jpg',
+              'https://ic.pics.livejournal.com/zdorovs/16627846/1482515/1482515_original.jpg',
+              'https://s14.stc.all.kpcdn.net/russia/wp-content/uploads/2021/10/Ploshhad-Respubliki-i-Presvyatoj-Devy-Marii-Joshkar-Ola-2048.jpg',
+            ]}
+          />
         </section>
 
         {/* Top Attractions */}
@@ -786,11 +789,9 @@ async function renderAttractionDetail(parsed: ParsedSlug, id: number) {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <Breadcrumbs items={crumbs} variant="dark" />
         {attraction.imageUrl && (
-          <img
-            src={attraction.imageUrl}
-            alt={attraction.name}
-            className="w-full h-64 md:h-96 object-cover rounded-xl mb-6"
-          />
+          <div className="mb-6">
+            <ImageGallery images={[attraction.imageUrl]} alt={attraction.name} layout="hero" />
+          </div>
         )}
         <div className="flex flex-wrap items-center gap-3 mb-4">
           <span className="bg-primary-100 text-primary-700 text-sm font-medium px-3 py-1 rounded-full">
@@ -875,19 +876,7 @@ async function renderHotelDetail(parsed: ParsedSlug, id: number) {
         {/* Image Gallery */}
         {allImages.length > 0 && (
           <div className="mb-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 rounded-xl overflow-hidden">
-              <div className="md:col-span-2 md:row-span-2">
-                <img src={allImages[0]} alt={hotel.name} className="w-full h-64 md:h-[400px] object-cover" loading="eager" />
-              </div>
-              {allImages.slice(1, 5).map((img, i) => (
-                <div key={i} className="hidden md:block">
-                  <img src={img} alt={`${hotel.name} - фото ${i + 2}`} className="w-full h-[196px] object-cover" loading="lazy" />
-                </div>
-              ))}
-            </div>
-            {allImages.length > 5 && (
-              <p className="text-sm text-gray-500 mt-2">+{allImages.length - 5} фото</p>
-            )}
+            <ImageGallery images={allImages} alt={hotel.name} layout="hero" />
           </div>
         )}
 
@@ -1031,7 +1020,9 @@ async function renderRestaurantDetail(parsed: ParsedSlug, id: number) {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <Breadcrumbs items={crumbs} variant="dark" />
         {restaurant.imageUrl && (
-          <img src={restaurant.imageUrl} alt={restaurant.name} className="w-full h-64 md:h-96 object-cover rounded-xl mb-6" />
+          <div className="mb-6">
+            <ImageGallery images={[restaurant.imageUrl]} alt={restaurant.name} layout="hero" />
+          </div>
         )}
         <div className="flex flex-wrap items-center gap-3 mb-4">
           <span className="bg-primary-100 text-primary-700 text-sm font-medium px-3 py-1 rounded-full">{restaurant.cuisine}</span>
@@ -1090,7 +1081,9 @@ async function renderEventDetail(parsed: ParsedSlug, id: number) {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <Breadcrumbs items={crumbs} variant="dark" />
         {event.imageUrl && (
-          <img src={event.imageUrl} alt={event.title} className="w-full h-64 md:h-96 object-cover rounded-xl mb-6" />
+          <div className="mb-6">
+            <ImageGallery images={[event.imageUrl]} alt={event.title} layout="hero" />
+          </div>
         )}
         <div className="flex flex-wrap items-center gap-3 mb-4">
           <span className="bg-primary-100 text-primary-700 text-sm font-medium px-3 py-1 rounded-full">{event.category}</span>
