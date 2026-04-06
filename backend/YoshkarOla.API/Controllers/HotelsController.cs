@@ -64,8 +64,8 @@ public class HotelsController : ControllerBase
             .Select(h => new HotelDto(
                 h.Id, h.Name, h.ShortDescription, h.Address,
                 h.Latitude, h.Longitude,
-                h.ImageUrl, h.Stars, h.Rating, h.PriceFrom,
-                h.HasWifi, h.HasParking))
+                h.ImageUrl, h.Stars, h.Rating, h.ReviewCount, h.PriceFrom,
+                h.HasWifi, h.HasParking, h.Amenities))
             .ToListAsync();
 
         return Ok(new PagedResult<HotelDto>(items, totalCount, page, pageSize, totalPages));
@@ -79,9 +79,14 @@ public class HotelsController : ControllerBase
 
         return Ok(new HotelDetailDto(
             h.Id, h.Name, h.Description, h.ShortDescription, h.Address,
-            h.Latitude, h.Longitude, h.ImageUrl,
-            h.Stars, h.Rating, h.PriceFrom,
-            h.Phone, h.Website, h.HasWifi, h.HasParking, h.HasPool, h.HasRestaurant));
+            h.Latitude, h.Longitude, h.ImageUrl, h.Images,
+            h.Stars, h.Rating, h.ReviewCount, h.PriceFrom,
+            h.Phone, h.Website, h.HasWifi, h.HasParking, h.HasPool, h.HasRestaurant,
+            h.Amenities, h.CheckIn, h.CheckOut,
+            h.DescriptionLocation, h.DescriptionRooms, h.DescriptionFood,
+            h.DescriptionInfrastructure, h.DescriptionService, h.DescriptionAttractions,
+            h.RatingFood, h.RatingRoom, h.RatingWifi, h.RatingPrice,
+            h.RatingHygiene, h.RatingLocation, h.RatingService, h.RatingCleanliness));
     }
 
     [HttpGet("stars")]

@@ -77,7 +77,26 @@ namespace YoshkarOla.API.Migrations
                     HasWifi = table.Column<bool>(type: "boolean", nullable: false),
                     HasParking = table.Column<bool>(type: "boolean", nullable: false),
                     HasPool = table.Column<bool>(type: "boolean", nullable: false),
-                    HasRestaurant = table.Column<bool>(type: "boolean", nullable: false)
+                    HasRestaurant = table.Column<bool>(type: "boolean", nullable: false),
+                    Images = table.Column<string[]>(type: "text[]", nullable: false),
+                    Amenities = table.Column<string[]>(type: "text[]", nullable: false),
+                    ReviewCount = table.Column<int>(type: "integer", nullable: false),
+                    CheckIn = table.Column<string>(type: "text", nullable: false),
+                    CheckOut = table.Column<string>(type: "text", nullable: false),
+                    DescriptionLocation = table.Column<string>(type: "text", nullable: false),
+                    DescriptionRooms = table.Column<string>(type: "text", nullable: false),
+                    DescriptionFood = table.Column<string>(type: "text", nullable: false),
+                    DescriptionInfrastructure = table.Column<string>(type: "text", nullable: false),
+                    DescriptionService = table.Column<string>(type: "text", nullable: false),
+                    DescriptionAttractions = table.Column<string>(type: "text", nullable: false),
+                    RatingFood = table.Column<double>(type: "double precision", nullable: false),
+                    RatingRoom = table.Column<double>(type: "double precision", nullable: false),
+                    RatingWifi = table.Column<double>(type: "double precision", nullable: false),
+                    RatingPrice = table.Column<double>(type: "double precision", nullable: false),
+                    RatingHygiene = table.Column<double>(type: "double precision", nullable: false),
+                    RatingLocation = table.Column<double>(type: "double precision", nullable: false),
+                    RatingService = table.Column<double>(type: "double precision", nullable: false),
+                    RatingCleanliness = table.Column<double>(type: "double precision", nullable: false)
                 },
                 constraints: table =>
                 {

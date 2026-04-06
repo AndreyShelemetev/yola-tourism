@@ -10,9 +10,11 @@ public record HotelDto(
     string ImageUrl,
     int Stars,
     double Rating,
+    int ReviewCount,
     int PriceFrom,
     bool HasWifi,
-    bool HasParking
+    bool HasParking,
+    string[] Amenities
 );
 
 public record HotelDetailDto(
@@ -24,13 +26,32 @@ public record HotelDetailDto(
     double Latitude,
     double Longitude,
     string ImageUrl,
+    string[] Images,
     int Stars,
     double Rating,
+    int ReviewCount,
     int PriceFrom,
     string Phone,
     string Website,
     bool HasWifi,
     bool HasParking,
     bool HasPool,
-    bool HasRestaurant
+    bool HasRestaurant,
+    string[] Amenities,
+    string CheckIn,
+    string CheckOut,
+    string DescriptionLocation,
+    string DescriptionRooms,
+    string DescriptionFood,
+    string DescriptionInfrastructure,
+    string DescriptionService,
+    string DescriptionAttractions,
+    double RatingFood,
+    double RatingRoom,
+    double RatingWifi,
+    double RatingPrice,
+    double RatingHygiene,
+    double RatingLocation,
+    double RatingService,
+    double RatingCleanliness
 );

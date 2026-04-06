@@ -26,19 +26,36 @@ export interface Hotel {
   imageUrl: string;
   stars: number;
   rating: number;
+  reviewCount: number;
   priceFrom: number;
   hasWifi: boolean;
   hasParking: boolean;
+  amenities: string[];
 }
 
 export interface HotelDetail extends Hotel {
   description: string;
-  latitude: number;
-  longitude: number;
+  images: string[];
   phone: string;
   website: string;
   hasPool: boolean;
   hasRestaurant: boolean;
+  checkIn: string;
+  checkOut: string;
+  descriptionLocation: string;
+  descriptionRooms: string;
+  descriptionFood: string;
+  descriptionInfrastructure: string;
+  descriptionService: string;
+  descriptionAttractions: string;
+  ratingFood: number;
+  ratingRoom: number;
+  ratingWifi: number;
+  ratingPrice: number;
+  ratingHygiene: number;
+  ratingLocation: number;
+  ratingService: number;
+  ratingCleanliness: number;
 }
 
 export interface Restaurant {

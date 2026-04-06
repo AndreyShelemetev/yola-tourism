@@ -424,15 +424,26 @@ async function renderHotelsList(
               <div className="space-y-1">
                 <StarRating stars={h.stars} />
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-accent-400">★ {h.rating.toFixed(1)}</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="bg-primary-600 text-white font-bold px-1.5 py-0.5 rounded text-xs">{h.rating.toFixed(1)}</span>
+                    {h.reviewCount > 0 && (
+                      <span className="text-gray-400 text-xs">{h.reviewCount} отз.</span>
+                    )}
+                  </div>
                   <span className="font-semibold text-primary-700">
                     от {h.priceFrom?.toLocaleString('ru-RU')} ₽
                   </span>
                 </div>
-                <div className="flex gap-2 text-xs text-gray-400">
-                  {h.hasWifi && <span>📶 Wi-Fi</span>}
-                  {h.hasParking && <span>🅿️ Парковка</span>}
-                </div>
+                {h.amenities?.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {h.amenities.slice(0, 3).map((a: string, i: number) => (
+                      <span key={i} className="bg-gray-100 text-gray-500 text-[10px] px-1.5 py-0.5 rounded">{a}</span>
+                    ))}
+                    {h.amenities.length > 3 && (
+                      <span className="text-gray-400 text-[10px] py-0.5">+{h.amenities.length - 3}</span>
+                    )}
+                  </div>
+                )}
               </div>
             </Card>
           ))
@@ -669,38 +680,145 @@ async function renderHotelDetail(parsed: ParsedSlug, id: number) {
     makeObjectSlug(hotel.name, id)
   )}`;
 
+  const descSections = [
+    { title: 'Расположение и транспорт', text: hotel.descriptionLocation },
+    { title: 'Номера и размещение', text: hotel.descriptionRooms },
+    { title: 'Питание и завтрак', text: hotel.descriptionFood },
+    { title: 'Инфраструктура и удобства', text: hotel.descriptionInfrastructure },
+    { title: 'Сервис и персонал', text: hotel.descriptionService },
+    { title: 'Достопримечательности рядом', text: hotel.descriptionAttractions },
+  ].filter(s => s.text);
+
+  const reviewCats = [
+    { label: 'Питание', value: hotel.ratingFood },
+    { label: 'Номер', value: hotel.ratingRoom },
+    { label: 'Wi-Fi', value: hotel.ratingWifi },
+    { label: 'Цена', value: hotel.ratingPrice },
+    { label: 'Гигиена', value: hotel.ratingHygiene },
+    { label: 'Расположение', value: hotel.ratingLocation },
+    { label: 'Услуги', value: hotel.ratingService },
+    { label: 'Чистота', value: hotel.ratingCleanliness },
+  ].filter(c => c.value > 0);
+
+  const allImages = hotel.images?.length ? hotel.images : hotel.imageUrl ? [hotel.imageUrl] : [];
+
   return (
     <>
       <LodgingLd
         name={hotel.name}
         description={hotel.description}
         address={hotel.address}
-        image={hotel.imageUrl}
+        image={allImages[0] || hotel.imageUrl}
         rating={hotel.rating}
         stars={hotel.stars}
         priceFrom={hotel.priceFrom}
         url={canonicalUrl}
       />
       <link rel="canonical" href={canonicalUrl} />
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <Breadcrumbs items={crumbs} />
-        {hotel.imageUrl && (
-          <img src={hotel.imageUrl} alt={hotel.name} className="w-full h-64 md:h-96 object-cover rounded-xl mb-6" />
+
+        {/* Image Gallery */}
+        {allImages.length > 0 && (
+          <div className="mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 rounded-xl overflow-hidden">
+              <div className="md:col-span-2 md:row-span-2">
+                <img src={allImages[0]} alt={hotel.name} className="w-full h-64 md:h-[400px] object-cover" loading="eager" />
+              </div>
+              {allImages.slice(1, 5).map((img, i) => (
+                <div key={i} className="hidden md:block">
+                  <img src={img} alt={`${hotel.name} - фото ${i + 2}`} className="w-full h-[196px] object-cover" loading="lazy" />
+                </div>
+              ))}
+            </div>
+            {allImages.length > 5 && (
+              <p className="text-sm text-gray-500 mt-2">+{allImages.length - 5} фото</p>
+            )}
+          </div>
         )}
-        <div className="flex items-center gap-3 mb-4">
+
+        {/* Header */}
+        <div className="flex flex-wrap items-center gap-3 mb-2">
           <StarRating stars={hotel.stars} />
-          <span className="text-accent-400 font-semibold">★ {hotel.rating.toFixed(1)}</span>
+          <div className="flex items-center gap-2">
+            <span className="bg-primary-600 text-white font-bold px-2.5 py-1 rounded-lg text-lg">{hotel.rating.toFixed(1)}</span>
+            {hotel.reviewCount > 0 && (
+              <span className="text-gray-500 text-sm">{hotel.reviewCount} отзывов</span>
+            )}
+          </div>
         </div>
+
         <h1 className="text-3xl font-bold mb-2">{hotel.name}</h1>
         <p className="text-gray-500 mb-2">📍 {hotel.address}</p>
-        <p className="text-2xl font-bold text-dark mb-6">от {hotel.priceFrom.toLocaleString('ru-RU')} ₽ / ночь</p>
-        <div className="flex flex-wrap gap-3 mb-6">
-          {hotel.hasWifi && <span className="bg-gray-100 text-gray-600 text-sm px-3 py-1 rounded-full">📶 Wi-Fi</span>}
-          {hotel.hasParking && <span className="bg-gray-100 text-gray-600 text-sm px-3 py-1 rounded-full">🅿️ Парковка</span>}
-          {hotel.hasPool && <span className="bg-gray-100 text-gray-600 text-sm px-3 py-1 rounded-full">🏊 Бассейн</span>}
-          {hotel.hasRestaurant && <span className="bg-gray-100 text-gray-600 text-sm px-3 py-1 rounded-full">🍽️ Ресторан</span>}
-        </div>
-        <p className="text-gray-700 leading-relaxed whitespace-pre-line mb-6">{hotel.description}</p>
+
+        {hotel.priceFrom > 0 && (
+          <p className="text-2xl font-bold text-dark mb-4">
+            от {hotel.priceFrom.toLocaleString('ru-RU')} ₽ / ночь
+          </p>
+        )}
+
+        {(hotel.checkIn || hotel.checkOut) && (
+          <div className="flex gap-4 text-sm text-gray-600 mb-4">
+            {hotel.checkIn && <span>Заезд: с {hotel.checkIn}</span>}
+            {hotel.checkOut && <span>Выезд: до {hotel.checkOut}</span>}
+          </div>
+        )}
+
+        {/* Amenities */}
+        {hotel.amenities?.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-6">
+            {hotel.amenities.map((a, i) => (
+              <span key={i} className="bg-gray-100 text-gray-700 text-sm px-3 py-1.5 rounded-full">
+                {a}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Main Description */}
+        {hotel.description && (
+          <div className="mb-8">
+            <h2 className="text-xl font-bold mb-3">Описание</h2>
+            <p className="text-gray-700 leading-relaxed">{hotel.description}</p>
+          </div>
+        )}
+
+        {/* Description Sections */}
+        {descSections.length > 0 && (
+          <div className="mb-8 space-y-4">
+            {descSections.map((s, i) => (
+              <details key={i} className="bg-gray-50 rounded-lg" open={i === 0}>
+                <summary className="cursor-pointer px-4 py-3 font-semibold text-dark hover:bg-gray-100 rounded-lg">
+                  {s.title}
+                </summary>
+                <p className="px-4 pb-4 text-gray-700 leading-relaxed">{s.text}</p>
+              </details>
+            ))}
+          </div>
+        )}
+
+        {/* Review Category Ratings */}
+        {reviewCats.length > 0 && (
+          <div className="mb-8">
+            <h2 className="text-xl font-bold mb-4">Оценки по категориям</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {reviewCats.map((c, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <span className="text-sm text-gray-600 w-28 shrink-0">{c.label}</span>
+                  <div className="flex-1 bg-gray-200 rounded-full h-2.5">
+                    <div
+                      className="bg-primary-600 h-2.5 rounded-full"
+                      style={{ width: `${c.value * 10}%` }}
+                    />
+                  </div>
+                  <span className="text-sm font-semibold w-8 text-right">{c.value.toFixed(1)}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Contacts */}
         {(hotel.phone || hotel.website) && (
           <div className="bg-gray-50 rounded-lg p-4 space-y-2">
             <h3 className="font-semibold">Контакты</h3>
