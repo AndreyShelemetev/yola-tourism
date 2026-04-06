@@ -45,8 +45,8 @@ public class SearchController : ControllerBase
             .Select(h => new HotelDto(
                 h.Id, h.Name, h.ShortDescription, h.Address,
                 h.Latitude, h.Longitude,
-                h.ImageUrl, h.Stars, h.Rating, h.PriceFrom,
-                h.HasWifi, h.HasParking))
+                h.ImageUrl, h.Stars, h.Rating, h.ReviewCount, h.PriceFrom,
+                h.HasWifi, h.HasParking, h.Amenities))
             .ToListAsync();
 
         var restaurants = await _db.Restaurants
