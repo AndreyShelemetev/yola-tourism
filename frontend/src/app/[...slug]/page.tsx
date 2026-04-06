@@ -854,7 +854,7 @@ async function renderHotelDetail(parsed: ParsedSlug, id: number) {
     { label: 'Чистота', value: hotel.ratingCleanliness },
   ].filter(c => c.value > 0);
 
-  const allImages = (hotel.images?.length ? hotel.images : hotel.imageUrl ? [hotel.imageUrl] : []).slice(0, 3);
+  const allImages = hotel.images?.length ? hotel.images : hotel.imageUrl ? [hotel.imageUrl] : [];
 
   return (
     <>
