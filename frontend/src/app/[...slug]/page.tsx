@@ -250,37 +250,182 @@ async function renderCityOverview(parsed: ParsedSlug) {
     city: parsed.city,
   });
 
+  const canonicalUrl = `${SITE_URL}${buildPath(parsed.region!, parsed.city!)}`;
+
+  let attractions = { items: [] as any[] };
+  let hotels = { items: [] as any[] };
+  let restaurants = { items: [] as any[] };
+  let events = { items: [] as any[] };
+
+  try { attractions = await getAttractions({ pageSize: 4 }); } catch {}
+  try { hotels = await getHotels({ pageSize: 4, sort: 'rating' }); } catch {}
+  try { restaurants = await getRestaurants({ pageSize: 4 }); } catch {}
+  try { events = await getEvents({ pageSize: 4 }); } catch {}
+
   return (
     <>
-      <div className="bg-[rgb(204,1,0)] text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Breadcrumbs items={crumbs} />
-          <h1 className="text-3xl md:text-4xl font-bold">
-            {city.name}
-          </h1>
-          <p className="mt-2 text-white">
-            Путеводитель по {city.nameIn} — что посмотреть, где остановиться и поесть
-          </p>
+      <link rel="canonical" href={canonicalUrl} />
+
+      {/* Hero */}
+      <div className="relative bg-[rgb(204,1,0)] text-white">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-transparent" />
+        <div
+          className="relative bg-cover bg-center"
+          style={{ backgroundImage: "url('https://visit-mariel.ru/upload/resize_cache/iblock/574/520_640_2619711fa078991f0a23d032687646b21/a019uazh4hf5yjzs4oixw3kwg8qlhsgx.jpg')" }}
+        >
+          <div className="bg-black/50">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+              <Breadcrumbs items={crumbs} />
+              <h1 className="text-4xl md:text-5xl font-bold mb-4">
+                {city.name} — путеводитель для туристов
+              </h1>
+              <p className="text-xl text-white/90 max-w-3xl">
+                Столица Республики Марий Эл — «самый необычный город России». Набережные в европейском стиле, копия Спасской башни, уникальные храмы и тёплый марийский колорит.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {Object.values(ENTITY_TYPES).map((et) => (
-            <Link
-              key={et.slug}
-              href={buildPath(parsed.region!, parsed.city!, et.slug)}
-              className="group bg-white rounded-xl border border-gray-100 hover:border-primary-200 hover:shadow-lg transition-all p-6 text-center"
-            >
-              <h3 className="text-lg font-semibold mb-2 text-dark group-hover:text-primary-500 transition-colors">
-                {et.namePlural}
-              </h3>
-              <p className="text-gray-500 text-sm">
-                {et.nameInCity} в {city.nameIn}
-              </p>
-            </Link>
-          ))}
-        </div>
-      </section>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        {/* Info Block */}
+        <section className="py-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-white rounded-xl border border-gray-100 p-6 shadow-sm">
+              <h3 className="font-bold text-lg mb-2">🗺️ Как добраться</h3>
+              <p className="text-gray-600 text-sm">Аэропорт (рейсы из Москвы), ж/д вокзал (поезда из Москвы за 14 ч), автобусы из Казани (2,5 ч) и Чебоксар (1,5 ч).</p>
+            </div>
+            <div className="bg-white rounded-xl border border-gray-100 p-6 shadow-sm">
+              <h3 className="font-bold text-lg mb-2">🌤️ Когда ехать</h3>
+              <p className="text-gray-600 text-sm">Лучшее время — май–сентябрь. Летом +20…+25 °C, тёплые вечера у набережных. Зимой — каток, лыжи и новогодние ярмарки.</p>
+            </div>
+            <div className="bg-white rounded-xl border border-gray-100 p-6 shadow-sm">
+              <h3 className="font-bold text-lg mb-2">⏱️ Сколько дней</h3>
+              <p className="text-gray-600 text-sm">На город хватит 2–3 дня. С поездкой к Замку Шереметева и озёрам — 4–5 дней. Идеально для выходных из Казани или Нижнего Новгорода.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* Categories */}
+        <section className="pb-8">
+          <h2 className="text-2xl font-bold mb-6">Разделы путеводителя</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {Object.values(ENTITY_TYPES).map((et) => (
+              <Link
+                key={et.slug}
+                href={buildPath(parsed.region!, parsed.city!, et.slug)}
+                className="group bg-white rounded-xl border border-gray-100 hover:border-primary-200 hover:shadow-lg transition-all p-5 text-center"
+              >
+                <span className="text-3xl block mb-2">
+                  {et.slug === 'dostoprimechatelnosti' ? '🏛️' : et.slug === 'oteli' ? '🏨' : et.slug === 'restorany' ? '🍽️' : '🎭'}
+                </span>
+                <h3 className="text-base font-semibold text-dark group-hover:text-primary-500 transition-colors">
+                  {et.namePlural}
+                </h3>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* Photo Gallery */}
+        <section className="pb-12">
+          <h2 className="text-2xl font-bold mb-6">Фото {city.nameGen}</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 rounded-xl overflow-hidden">
+            <div className="md:col-span-2 md:row-span-2">
+              <img src="https://visit-mariel.ru/upload/resize_cache/iblock/574/520_640_2619711fa078991f0a23d032687646b21/a019uazh4hf5yjzs4oixw3kwg8qlhsgx.jpg" alt="Набережная Брюгге в Йошкар-Оле" className="w-full h-full object-cover min-h-[200px] md:min-h-[400px]" />
+            </div>
+            <img src="https://visit-mariel.ru/upload/resize_cache/iblock/771/520_640_2619711fa078991f0a23d032687646b21/3m7m7jm5wxatwrzuqeggqh0bmpwbxf2s.jpg" alt="Патриаршая площадь" className="w-full h-[196px] object-cover" />
+            <img src="https://visit-mariel.ru/upload/resize_cache/iblock/f68/520_640_2619711fa078991f0a23d032687646b21/f681lyfomqnq204stzgb2dctqbmz69bv.jpg" alt="Площадь Оболенского-Ноготкова" className="w-full h-[196px] object-cover" />
+            <img src="https://visit-mariel.ru/upload/resize_cache/iblock/63e/520_640_2619711fa078991f0a23d032687646b21/7lzoxzhnnxrxfxkmh3pxl3hhhrx6xtfb.jpg" alt="Собор Благовещения" className="w-full h-[196px] object-cover" />
+            <img src="https://visit-mariel.ru/upload/resize_cache/iblock/007/520_640_2619711fa078991f0a23d032687646b21/007e19f3ac0e6dde46d22a4a5e2220d5b5e6b28e.jpg" alt="Театральный мост вечером" className="w-full h-[196px] object-cover" />
+          </div>
+        </section>
+
+        {/* Top Attractions */}
+        {attractions.items.length > 0 && (
+          <section className="pb-12">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold">Топ достопримечательности</h2>
+              <Link href={buildPath(parsed.region!, parsed.city!, 'dostoprimechatelnosti')} className="text-[rgb(204,1,0)] font-medium hover:underline text-sm">Все →</Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {attractions.items.slice(0, 4).map((a: any) => (
+                <Card key={a.id} href={buildPath(parsed.region!, parsed.city!, 'dostoprimechatelnosti') + '/' + makeObjectSlug(a.name, a.id)} imageUrl={a.imageUrl} title={a.name} subtitle={a.address}>
+                  <span className="text-accent-400 text-sm">★ {a.rating.toFixed(1)}</span>
+                </Card>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Top Hotels */}
+        {hotels.items.length > 0 && (
+          <section className="pb-12">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold">Лучшие отели</h2>
+              <Link href={buildPath(parsed.region!, parsed.city!, 'oteli')} className="text-[rgb(204,1,0)] font-medium hover:underline text-sm">Все →</Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {hotels.items.slice(0, 4).map((h: any) => (
+                <Card key={h.id} href={buildPath(parsed.region!, parsed.city!, 'oteli') + '/' + makeObjectSlug(h.name, h.id)} imageUrl={h.imageUrl} title={h.name} subtitle={h.address}>
+                  <div className="flex items-center gap-2">
+                    <StarRating stars={h.stars} />
+                    <span className="bg-primary-600 text-white font-bold px-1.5 py-0.5 rounded text-xs">{h.rating.toFixed(1)}</span>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Top Restaurants */}
+        {restaurants.items.length > 0 && (
+          <section className="pb-12">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold">Где поесть</h2>
+              <Link href={buildPath(parsed.region!, parsed.city!, 'restorany')} className="text-[rgb(204,1,0)] font-medium hover:underline text-sm">Все →</Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {restaurants.items.slice(0, 4).map((r: any) => (
+                <Card key={r.id} href={buildPath(parsed.region!, parsed.city!, 'restorany') + '/' + makeObjectSlug(r.name, r.id)} imageUrl={r.imageUrl} title={r.name} subtitle={`${r.cuisine} · ${r.priceRange}`}>
+                  <span className="text-accent-400 text-sm">★ {r.rating.toFixed(1)}</span>
+                </Card>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Events */}
+        {events.items.length > 0 && (
+          <section className="pb-12">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold">Ближайшие события</h2>
+              <Link href={buildPath(parsed.region!, parsed.city!, 'sobytiya')} className="text-[rgb(204,1,0)] font-medium hover:underline text-sm">Все →</Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {events.items.slice(0, 4).map((e: any) => (
+                <Card key={e.id} href={buildPath(parsed.region!, parsed.city!, 'sobytiya') + '/' + makeObjectSlug(e.title, e.id)} imageUrl={e.imageUrl} title={e.title} subtitle={e.date} badge={e.isFree ? 'Бесплатно' : undefined} />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* SEO Text */}
+        <section className="pb-16">
+          <div className="bg-gray-50 rounded-xl p-8">
+            <h2 className="text-2xl font-bold mb-4">О {city.nameIn} для туристов</h2>
+            <div className="text-gray-700 leading-relaxed space-y-3">
+              <p>Йошкар-Ола — столица Республики Марий Эл и один из самых необычных городов России. За последние 15 лет центр города был полностью перестроен: здесь появились набережные во фламандском стиле, копия Спасской башни Кремля, венецианские дворцы и баварские замки.</p>
+              <p><strong>Набережная Брюгге</strong> — визитная карточка города. Фасады домов повторяют архитектуру бельгийского Брюгге. Вечером набережная подсвечивается и становится главным местом для прогулок и фотографий.</p>
+              <p><strong>Патриаршая площадь</strong> — сердце нового города с уникальными часами «12 апостолов», Царь-пушкой и национальной художественной галереей. Каждый час фигурки апостолов выходят из часовни — зрелище, которое собирает толпы туристов.</p>
+              <p><strong>Йошкин Кот</strong> — бронзовая скульптура, ставшая неофициальным символом города. По традиции нужно потереть коту нос на удачу.</p>
+              <p>Из кулинарных впечатлений обязательно попробуйте <strong>подкоголи</strong> — марийские пельмени с разными начинками, <strong>команмелна</strong> — трёхслойные блины и местное пиво «Медведевское».</p>
+              <p>Город удобно расположен между Казанью (2,5 часа) и Чебоксарами (1,5 часа) и идеально подходит для путешествия на выходные.</p>
+            </div>
+          </div>
+        </section>
+      </div>
     </>
   );
 }
