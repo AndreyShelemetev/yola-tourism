@@ -271,7 +271,7 @@ async function renderCityOverview(parsed: ParsedSlug) {
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-transparent" />
         <div
           className="relative bg-cover bg-center"
-          style={{ backgroundImage: "url('https://visit-mariel.ru/upload/resize_cache/iblock/574/520_640_2619711fa078991f0a23d032687646b21/a019uazh4hf5yjzs4oixw3kwg8qlhsgx.jpg')" }}
+          style={{ backgroundImage: "url('https://avatars.mds.yandex.net/get-marketcms/1533751/img-d7f7d532-6353-4c38-b0bc-0bbb0631ce8f.jpeg/optimize')" }}
         >
           <div className="bg-black/50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
@@ -311,34 +311,43 @@ async function renderCityOverview(parsed: ParsedSlug) {
         <section className="pb-8">
           <h2 className="text-2xl font-bold mb-6">Разделы путеводителя</h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {Object.values(ENTITY_TYPES).map((et) => (
-              <Link
-                key={et.slug}
-                href={buildPath(parsed.region!, parsed.city!, et.slug)}
-                className="group bg-white rounded-xl border border-gray-100 hover:border-primary-200 hover:shadow-lg transition-all p-5 text-center"
-              >
-                <span className="text-3xl block mb-2">
-                  {et.slug === 'dostoprimechatelnosti' ? '🏛️' : et.slug === 'oteli' ? '🏨' : et.slug === 'restorany' ? '🍽️' : '🎭'}
-                </span>
-                <h3 className="text-base font-semibold text-dark group-hover:text-primary-500 transition-colors">
-                  {et.namePlural}
-                </h3>
-              </Link>
-            ))}
+            {[
+              { slug: 'dostoprimechatelnosti', image: 'https://avatars.mds.yandex.net/i?id=1b405ea94e1ac276d0be199287f7f268acac8aa6-5139440-images-thumbs&n=13' },
+              { slug: 'oteli', image: 'https://avatars.mds.yandex.net/i?id=f7dd2d63384def0fe6bd0e83bff66d9b46e6af9c-10353822-images-thumbs&n=13' },
+              { slug: 'restorany', image: 'https://avatars.mds.yandex.net/get-altay/753950/2a00000185a16cd6ce887f73ccd8a607ef9a/XXL_height' },
+              { slug: 'sobytiya', image: 'https://i.ytimg.com/vi/U5nI3D2384U/maxresdefault.jpg' },
+            ].map((cat) => {
+              const et = ENTITY_TYPES[cat.slug];
+              return (
+                <Link
+                  key={cat.slug}
+                  href={buildPath(parsed.region!, parsed.city!, cat.slug)}
+                  className="group bg-white rounded-xl border border-gray-100 hover:border-primary-200 hover:shadow-lg transition-all overflow-hidden"
+                >
+                  <div className="h-32 overflow-hidden">
+                    <img src={cat.image} alt={et.namePlural} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+                  </div>
+                  <h3 className="text-base font-semibold text-dark group-hover:text-primary-500 transition-colors p-3 text-center">
+                    {et.namePlural}
+                  </h3>
+                </Link>
+              );
+            })}
           </div>
         </section>
 
         {/* Photo Gallery */}
         <section className="pb-12">
           <h2 className="text-2xl font-bold mb-6">Фото {city.nameGen}</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 rounded-xl overflow-hidden">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-2 rounded-xl overflow-hidden">
             <div className="md:col-span-2 md:row-span-2">
-              <img src="https://visit-mariel.ru/upload/resize_cache/iblock/574/520_640_2619711fa078991f0a23d032687646b21/a019uazh4hf5yjzs4oixw3kwg8qlhsgx.jpg" alt="Набережная Брюгге в Йошкар-Оле" className="w-full h-full object-cover min-h-[200px] md:min-h-[400px]" />
+              <img src="https://avatars.mds.yandex.net/get-marketcms/1533751/img-d7f7d532-6353-4c38-b0bc-0bbb0631ce8f.jpeg/optimize" alt="Набережная Брюгге в Йошкар-Оле" className="w-full h-full object-cover min-h-[200px] md:min-h-[420px]" />
             </div>
-            <img src="https://visit-mariel.ru/upload/resize_cache/iblock/771/520_640_2619711fa078991f0a23d032687646b21/3m7m7jm5wxatwrzuqeggqh0bmpwbxf2s.jpg" alt="Патриаршая площадь" className="w-full h-[196px] object-cover" />
-            <img src="https://visit-mariel.ru/upload/resize_cache/iblock/f68/520_640_2619711fa078991f0a23d032687646b21/f681lyfomqnq204stzgb2dctqbmz69bv.jpg" alt="Площадь Оболенского-Ноготкова" className="w-full h-[196px] object-cover" />
-            <img src="https://visit-mariel.ru/upload/resize_cache/iblock/63e/520_640_2619711fa078991f0a23d032687646b21/7lzoxzhnnxrxfxkmh3pxl3hhhrx6xtfb.jpg" alt="Собор Благовещения" className="w-full h-[196px] object-cover" />
-            <img src="https://visit-mariel.ru/upload/resize_cache/iblock/007/520_640_2619711fa078991f0a23d032687646b21/007e19f3ac0e6dde46d22a4a5e2220d5b5e6b28e.jpg" alt="Театральный мост вечером" className="w-full h-[196px] object-cover" />
+            <img src="https://fs.tonkosti.ru/ai/uk/aiukc6xc7p4wowgk88ow880s0.jpg" alt="Площадь Республики Йошкар-Ола" className="w-full h-[206px] object-cover" />
+            <img src="https://kazan-tur.com/upload/iblock/7cc/6ycrc1ytfa2qxprk95l7irydqkihxm17.jpg" alt="Набережная Амстердам" className="w-full h-[206px] object-cover" />
+            <img src="https://cdnn21.img.ria.ru/images/07e7/0a/0d/1902651313_0:150:3107:1898_1920x0_80_0_0_d839cd9a279cccfe72ac4a55233fead2.jpg" alt="Вечерняя Йошкар-Ола" className="w-full h-[206px] object-cover" />
+            <img src="https://ic.pics.livejournal.com/zdorovs/16627846/1482515/1482515_original.jpg" alt="Патриаршая площадь и часы 12 апостолов" className="w-full h-[206px] object-cover" />
+            <img src="https://s14.stc.all.kpcdn.net/russia/wp-content/uploads/2021/10/Ploshhad-Respubliki-i-Presvyatoj-Devy-Marii-Joshkar-Ola-2048.jpg" alt="Площадь Республики и Пресвятой Девы Марии" className="w-full h-[206px] object-cover" />
           </div>
         </section>
 
