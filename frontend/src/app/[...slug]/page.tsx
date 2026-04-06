@@ -630,7 +630,7 @@ async function renderAttractionDetail(parsed: ParsedSlug, id: number) {
       />
       <link rel="canonical" href={canonicalUrl} />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <Breadcrumbs items={crumbs} />
+        <Breadcrumbs items={crumbs} variant="dark" />
         {attraction.imageUrl && (
           <img
             src={attraction.imageUrl}
@@ -716,7 +716,7 @@ async function renderHotelDetail(parsed: ParsedSlug, id: number) {
       />
       <link rel="canonical" href={canonicalUrl} />
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <Breadcrumbs items={crumbs} />
+        <Breadcrumbs items={crumbs} variant="dark" />
 
         {/* Image Gallery */}
         {allImages.length > 0 && (
@@ -875,7 +875,7 @@ async function renderRestaurantDetail(parsed: ParsedSlug, id: number) {
       />
       <link rel="canonical" href={canonicalUrl} />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <Breadcrumbs items={crumbs} />
+        <Breadcrumbs items={crumbs} variant="dark" />
         {restaurant.imageUrl && (
           <img src={restaurant.imageUrl} alt={restaurant.name} className="w-full h-64 md:h-96 object-cover rounded-xl mb-6" />
         )}
@@ -934,7 +934,7 @@ async function renderEventDetail(parsed: ParsedSlug, id: number) {
       />
       <link rel="canonical" href={canonicalUrl} />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <Breadcrumbs items={crumbs} />
+        <Breadcrumbs items={crumbs} variant="dark" />
         {event.imageUrl && (
           <img src={event.imageUrl} alt={event.title} className="w-full h-64 md:h-96 object-cover rounded-xl mb-6" />
         )}

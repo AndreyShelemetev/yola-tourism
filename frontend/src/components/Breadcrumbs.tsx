@@ -50,7 +50,7 @@ export function buildBreadcrumbs(parsed: {
   return crumbs;
 }
 
-export default function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {
+export default function Breadcrumbs({ items, variant = 'light' }: { items: BreadcrumbItem[]; variant?: 'light' | 'dark' }) {
   if (items.length <= 1) return null;
 
   const jsonLd = {
@@ -66,26 +66,31 @@ export default function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {
       })),
   };
 
+  const navColor = variant === 'dark' ? 'text-gray-500' : 'text-white/80';
+  const sepColor = variant === 'dark' ? 'text-gray-400' : 'text-white/60';
+  const linkColor = variant === 'dark' ? 'text-[rgb(204,1,0)] hover:text-red-700' : 'hover:text-white';
+  const activeColor = variant === 'dark' ? 'text-gray-800 font-medium' : 'text-white font-medium';
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <nav aria-label="Breadcrumb" className="text-sm text-white/80 mb-4">
+      <nav aria-label="Breadcrumb" className={`text-sm ${navColor} mb-4`}>
         <ol className="flex flex-wrap items-center gap-1">
           {items.map((item, i) => (
             <li key={i} className="flex items-center gap-1">
-              {i > 0 && <span className="text-white/60">/</span>}
+              {i > 0 && <span className={sepColor}>/</span>}
               {item.href ? (
                 <Link
                   href={item.href}
-                  className="hover:text-white transition-colors"
+                  className={`${linkColor} transition-colors`}
                 >
                   {item.label}
                 </Link>
               ) : (
-                <span className="text-white font-medium">{item.label}</span>
+                <span className={activeColor}>{item.label}</span>
               )}
             </li>
           ))}
