@@ -841,7 +841,6 @@ async function renderHotelDetail(parsed: ParsedSlug, id: number) {
     { title: 'Питание и завтрак', text: hotel.descriptionFood },
     { title: 'Инфраструктура и удобства', text: hotel.descriptionInfrastructure },
     { title: 'Сервис и персонал', text: hotel.descriptionService },
-    { title: 'Достопримечательности рядом', text: hotel.descriptionAttractions },
   ].filter(s => s.text);
 
   const reviewCats = [
@@ -879,17 +878,6 @@ async function renderHotelDetail(parsed: ParsedSlug, id: number) {
             <ImageGallery images={allImages} alt={hotel.name} layout="hero" />
           </div>
         )}
-
-        {/* Header */}
-        <div className="flex flex-wrap items-center gap-3 mb-2">
-          <StarRating stars={hotel.stars} />
-          <div className="flex items-center gap-2">
-            <span className="bg-primary-600 text-white font-bold px-2.5 py-1 rounded-lg text-lg">{hotel.rating.toFixed(1)}</span>
-            {hotel.reviewCount > 0 && (
-              <span className="text-gray-500 text-sm">{hotel.reviewCount} отзывов</span>
-            )}
-          </div>
-        </div>
 
         <h1 className="text-3xl font-bold mb-2">{hotel.name}</h1>
         <p className="text-gray-500 mb-2">📍 {hotel.address}</p>
@@ -1032,7 +1020,7 @@ async function renderRestaurantDetail(parsed: ParsedSlug, id: number) {
           )}
           <span className="text-accent-400 font-semibold">★ {restaurant.rating.toFixed(1)}</span>
         </div>
-        <h1 className="text-3xl font-bold mb-4">{restaurant.name}</h1>
+        <h1 className="text-3xl font-bold mb-2">{restaurant.name}</h1>
         <p className="text-gray-500 mb-2">📍 {restaurant.address}</p>
         {restaurant.workingHours && <p className="text-gray-500 mb-2">🕐 {restaurant.workingHours}</p>}
         {restaurant.phone && <p className="text-gray-500 mb-6">📞 {restaurant.phone}</p>}
